@@ -27,6 +27,7 @@ The objective of this project is to analyze the selected source code files, unde
 ## Repository Structure
 
 greenDAO/
+
 └── database/
 ├── DatabaseStatement.java
 ├── EncryptedDatabaseStatement.java

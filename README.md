@@ -25,9 +25,8 @@ This repository contains selected files from the Database module of the **greenD
 The objective of this project is to analyze the selected source code files, understand their responsibilities, identify potential violations of SOLID principles, and evaluate their structural design while preserving existing functionality.
 
 ## Repository Structure
-
+```
 greenDAO/
-
 └── database/
 ├── DatabaseStatement.java
 ├── EncryptedDatabaseStatement.java
@@ -37,7 +36,7 @@ greenDAO/
 ├── StandardDatabase.java
 ├── DatabaseOpenHelper.java
 └── README.md
-
+```
 ---
 ## 📌 Submission Details
 * **Selected Files:** 7 files categorized by size (Small, Medium, Large)

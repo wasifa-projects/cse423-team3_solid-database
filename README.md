@@ -105,3 +105,42 @@ greenDAO/
   * **Single Responsibility Principle (SRP):** Handles database lifecycle callbacks (`onCreate`/`onUpgrade`), connection creation, and encryption configuration. Migration logic should be delegated to a dedicated `SchemaMigrator` class.
   * **Open/Closed Principle (OCP):** When adding new migration strategies, `onUpgrade` must be modified directly. Using a Strategy Pattern (`MigrationStrategy`) would allow adding migration rules without altering the helper class.
   * **Dependency Inversion Principle (DIP):** Instead of directly instantiating encrypted or standard database wrappers, an abstract `DatabaseFactory` should be injected to handle connection instantiation.
+
+---
+
+## 🤖 Task 3: LLM-Assisted SOLID Analysis & Refactoring Proposals
+
+### 1. DatabaseStatement.java
+* **Prompt Used:** *"Analyze the provided DatabaseStatement.java interface from greenDAO. Identify violations of SOLID principles (specifically SRP and ISP) and provide a refactored version of the code that separates statement execution from parameter binding."*
+* **Violations:** SRP (mixes execution with binding) & ISP (forces execution-only callers to depend on binding methods).
+* **Refactored Strategy:** Split into `StatementBinder` and `StatementExecutable` interfaces.
+
+### 2. EncryptedDatabaseStatement.java
+* **Prompt Used:** *"Analyze EncryptedDatabaseStatement.java from greenDAO. Identify SOLID violations (specifically SRP and DIP) and provide refactored code using the Adapter Pattern."*
+* **Violations:** SRP (delegation and parameter mapping mixed) & DIP (hard dependency on concrete SQLCipher classes).
+* **Refactored Strategy:** Applied Adapter Pattern with an `EncryptedParamMapper` interface.
+
+### 3. Database.java
+* **Prompt Used:** *"Analyze the Database.java interface from greenDAO. Identify ISP and DIP violations and refactor it into smaller, role-specific interfaces."*
+* **Violations:** ISP (monolithic database interface combining transactions, execution, and compilation).
+* **Refactored Strategy:** Segregated into `TransactionManager`, `QueryExecutor`, and `StatementCompiler`.
+
+### 4. StandardDatabaseStatement.java
+* **Prompt Used:** *"Analyze StandardDatabaseStatement.java from greenDAO. Identify SRP and LSP aspects, and provide refactored code that encapsulates native Android SQLiteStatement execution safely."*
+* **Violations:** SRP (wraps native objects and manages resource lifecycles simultaneously).
+* **Refactored Strategy:** Encapsulated execution delegates while honoring LSP for standard database drivers.
+
+### 5. EncryptedDatabase.java
+* **Prompt Used:** *"Analyze EncryptedDatabase.java from greenDAO. Identify SRP and DIP violations. Apply the Strategy Pattern to extract transaction handling."*
+* **Violations:** SRP (handles transactions, statement generation, and SQLCipher delegation simultaneously) & DIP (direct SQLCipher instantiations).
+* **Refactored Strategy:** Decoupled SQLCipher initialization using factory abstractions.
+
+### 6. StandardDatabase.java
+* **Prompt Used:** *"Analyze StandardDatabase.java from greenDAO. Identify SRP and OCP violations. Refactor statement creation using the Factory Pattern."*
+* **Violations:** OCP (modifying statement creation requires changing core implementation).
+* **Refactored Strategy:** Extracted statement generation into a `StatementFactory` interface.
+
+### 7. DatabaseOpenHelper.java
+* **Prompt Used:** *"Analyze DatabaseOpenHelper.java from greenDAO. Identify SRP, OCP, and DIP violations. Refactor migration and encryption creation logic into separate strategies."*
+* **Violations:** SRP (combines DB lifecycle, migration, and connection logic) & OCP (schema updates require modifying `onUpgrade`).
+* **Refactored Strategy:** Introduced `DatabaseMigrationStrategy` and `EncryptedDbFactory`.
